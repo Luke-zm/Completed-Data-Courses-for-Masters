@@ -20,6 +20,7 @@ def check_normality(pd_series):
     pd_series.hist(grid=False);
 
     plt.subplot(133)
+    
     stats.probplot(pd_series, plot=plt);
     
 def generate_one_sample(delta_m, sd1, n, alpha=0.05):
