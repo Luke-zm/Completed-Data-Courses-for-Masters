@@ -12,3 +12,6 @@ temp/
 
 # ignore praw.ini
 praw.ini
+
+# ignore large files
+*.weights
