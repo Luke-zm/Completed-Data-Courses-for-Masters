@@ -16,3 +16,14 @@ praw.ini
 # ignore large files
 *.weights
 *.caffemodel
+*.cfg
+*.prototxt
+
+# ignore opencv
+*.x
+
+# ignore open cv
+opencv-4.x/
+
+# ignore models.yml
+models.yml
