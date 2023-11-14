@@ -27,3 +27,7 @@ opencv-4.x/
 
 # ignore models.yml
 models.yml
+
+# ignore cache
+_pycache_/
+
