@@ -30,4 +30,4 @@ models.yml
 
 # ignore cache
 _pycache_/
-
+*__pycache__
