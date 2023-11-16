@@ -8,5 +8,5 @@ IND5003 Data Analytics for Sense-making:
 * The techniques include frequently used time series models and predictive models such as regression, random forests, neural networks and deep learning.  
 * Most of the contents convered are applications and not very mathematical/ technical in nature.
 * For more information, check out [IND5003](https://nusmods.com/courses/IND5003/data-analytics-for-sense-making) on NUSMods website.
-* 
+
 ----
