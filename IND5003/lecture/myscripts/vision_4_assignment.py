@@ -4,23 +4,12 @@ from IPython.core.debugger import set_trace
 
 def postprocess(frame, outs, classes, yolo):
     # Increase the confidence threshold
-    confThreshold = 0.9  # Adjust the threshold to a higher value, e.g., 0.7
-    nmsThreshold = 0.8
+    confThreshold = 0.6  # Adjust the threshold to a higher value
+    nmsThreshold = 0.4
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
-
-    def drawPred(classId, conf, left, top, right, bottom):
-        # Define a color palette (RGB tuples for simplicity)
-        color_palette = [
-            (255, 0, 0),    # Color for class 0
-            (0, 255, 0),    # Color for class 1
-            (0, 0, 255),    # Color for class 2
-            # Add more colors for more classes
-        ]
-
-        # Select the color for the current class
-        bbox_color = color_palette[classId % len(color_palette)]
-
+    
+    def drawPred(classId, conf, left, top, right, bottom, bbox_color):
         # Increase border thickness
         border_thickness = 6  # Thick border for high visibility on a high-resolution image
 
@@ -33,7 +22,6 @@ def postprocess(frame, outs, classes, yolo):
         if classes:
             assert(classId < len(classes))
             label = '%s: %s' % (classes[classId], label)
-
         # Adjust font size and thickness for high-resolution image
         font_scale = 2  # Larger font scale for readability
         label_thickness = 2  # Thicker text for better visibility
@@ -47,18 +35,18 @@ def postprocess(frame, outs, classes, yolo):
         # Draw the label's background
         cv.rectangle(frame, (left, top - labelSize[1]), (left + labelSize[0], top + baseLine), tag_color, cv.FILLED)
 
-        # Choose a contrasting color for the text, e.g., black
+        # Choose a contrasting color for the text
         text_color = (0, 0, 0)  # Black color for the text
 
         # Draw the text
-        cv.putText(frame, label, (left, top - labelSize[1]), cv.FONT_HERSHEY_SIMPLEX, font_scale, text_color, thickness=label_thickness)
+        cv.putText(frame, label, (left, top), cv.FONT_HERSHEY_SIMPLEX, font_scale, text_color, thickness=label_thickness)
 
 
 
     layerNames = yolo.getLayerNames()
     lastLayerId = yolo.getLayerId(layerNames[-1])
     lastLayer = yolo.getLayer(lastLayerId)
-
+    
     classIds = []
     confidences = []
     boxes = []
@@ -128,12 +116,33 @@ def postprocess(frame, outs, classes, yolo):
             indices.extend(class_indices[nms_indices])
     else:
         indices = np.arange(0, len(classIds))
-
+    
+    # Set color
+    color_palette = [
+        (255, 0, 0),    # Color for class 0
+        (0, 255, 0),    # Color for class 1
+        (0, 0, 255),    # Color for class 2
+        (255, 255, 0),  # Color for class 3
+        (128, 0, 128),  # Color for class 4
+        ]
+    # Set counter
+    color_dict = {}
+    count_dict = {}
+    
     for i in indices:
+        classId = classIds[i]
+        if classId not in color_dict:
+            color_dict[classId] = color_palette[len(color_dict) % len(color_palette)]
+            count_dict[classes[classId]] = 1
+        else:
+            count_dict[classes[classId]] += 1
+        # Now get the color for the current class_id
+        bbox_color = color_dict[classId]
         box = boxes[i]
         left = box[0]
         top = box[1]
         width = box[2]
         height = box[3]
-        drawPred(classIds[i], confidences[i], left, top, left + width, top + height)
+        drawPred(classId, confidences[i], left, top, left + width, top + height, bbox_color)
         
+    return count_dict
