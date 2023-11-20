@@ -1,5 +1,6 @@
-# I4 Repo
-Repo to store all my materials for my masters studies at NUS.
+# Completed Data Courses for Masters
+Repo to store all my materials for my masters studies at NUS.   
+The Masters is for Smart Industry ([Industry 4.0](https://masters.nus.edu.sg/programmes/master-of-science-(industry-4)))
 
 ----
 IND5003 Data Analytics for Sense-making:   
